@@ -88,8 +88,11 @@ void deleteCubeMap(GLuint& texture) {
 void createProgram(GLuint& glProgram, GLuint& glShaderV, GLuint& glShaderF, const char* vertex_shader, const char* fragment_shader) {
 	glShaderV = glCreateShader(GL_VERTEX_SHADER);
 	glShaderF = glCreateShader(GL_FRAGMENT_SHADER);
-	const GLchar* vShaderSource = loadFile(vertex_shader);
-	const GLchar* fShaderSource = loadFile(fragment_shader);
+	// avoiding compliation error
+	//const GLchar* vShaderSource = loadFile(vertex_shader);
+	//const GLchar* fShaderSource = loadFile(fragment_shader);
+	const char* vShaderSource = loadFile(vertex_shader);
+	const char* fShaderSource = loadFile(fragment_shader);
 	glShaderSource(glShaderV, 1, &vShaderSource, NULL);
 	glShaderSource(glShaderF, 1, &fShaderSource, NULL);
 	delete [] vShaderSource;
