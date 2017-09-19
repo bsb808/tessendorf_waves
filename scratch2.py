@@ -84,6 +84,12 @@ class cOcean:
                 self.vertices[index].ny = 1.0;
                 self.vertices[index].nz = 0.0;    
 
+    def dispersion(self,n,m):
+        w_0 = 2.0*pi/200.0
+        kx = pi * (2*n-self.N)/self.length
+        kz = pi * (2*n-self.N)/self.length
+        return floor(sqrt(self.g*sqrt(kx**2+kz**2)) /w_0)*w_0
+
     def phillips(self,n,m):
         k = array([pi*(2*n-self.N)/self.length,
                    pi*(2*m-self.N)/self.length])
@@ -110,12 +116,14 @@ class cOcean:
                           self.vertices[index].b)
         htilde0mkconj = complex(self.vertices[index]._a,
                                 self.vertices[index]._b)
-        omegat = 0
+        omegat = self.dispersion(n, m) * t;
         cos_ = cos(omegat)
         sin_ = sin(omegat)
         c0 = complex(cos_,sin_)
         c1 = complex(cos_,-1.0*sin_)
         res = htilde0*c0 + htilde0mkconj*c1
+        #print '%d: %d:%f,%d:%f'%(index,n,self.vertices[index].x,m,self.vertices[index].z)
+        #res = htilde0*self.vertices[index].x*self.vertices[index].y
         return res
 
     def h_D_and_n(self,x,t):
@@ -124,23 +132,26 @@ class cOcean:
         nn = array([0.,0.,0.])
 
         for m in range(self.N):
-            kz = 2.0*pi*(m-N/2.0)/self.length
+            kz = 2.0*pi*(m-self.N/2.0)/self.length
             for n in range(self.N):
-                kx = 2.0*pi*(n-N/2.0)/self.length
+                kx = 2.0*pi*(n-self.N/2.0)/self.length
                 k = array([kx,kz])
                 
                 k_length = np.linalg.norm(k)
                 k_dot_x = dot(k,x)
                 
                 c = complex(cos(k_dot_x),sin(k_dot_x))
+                #print('%d:%d'%(n,m))
                 htilde_c = self.hTilde(t,n,m)*c
+                #htilde_c = self.hTilde(t,n,m)
+                #htilde_c = self.hTilde_0(n,m)
                 hh = hh + htilde_c
                 nn = nn + array([-kx*imag(htilde_c),0.0,-kz*imag(htilde_c)])
-            cvn = complex_vector_normal()
-            cvn.h = hh
-            cvn.D = DD
-            cvn.n = nn
-            return cvn
+        cvn = complex_vector_normal()
+        cvn.h = hh
+        cvn.D = DD
+        cvn.n = nn
+        return cvn
     
     def evaluateWaves(self,t):
         lamb= -1.0
@@ -162,7 +173,6 @@ def getXZY(ocean):
             x.append(ocean.vertices[index].x)
             z.append(ocean.vertices[index].z)
             y.append(ocean.vertices[index].y)
-
     return x,z,y
 
 def getho(ocean):
@@ -175,43 +185,59 @@ def getho(ocean):
             ho_imag.append(float(ocean.vertices[index].b))
     return ho_real, ho_imag
 
-N = 32
+N = 64 #32
 Lx = 64.0
-w = array([0.,5.])
+w = array([5.,5.])
 A = 0.0005
 ocean = cOcean(N,A,w,Lx)
 x,z,y = getXZY(ocean)
 #print((x,z,y))
 
-ocean.evaluateWaves(0.0)
-x,z,y = getXZY(ocean)
+tt = arange(0,10,0.5)
+for t,ii in zip(tt,range(len(tt))):
 
+    ocean.evaluateWaves(t)
+    x,z,y = getXZY(ocean)
 
-fig=figure(2)
-clf()
-ax = fig.gca(projection='3d')
-ax.plot_surface(x,z,y, color='b')       
+    xx = array(x).reshape(N,N)
+    zz = array(z).reshape(N,N)
+    yy = array(y).reshape(N,N)
+    fig=figure(2)
+    clf()
+    ax = fig.gca(projection='3d')
+    ax.plot_surface(xx,zz,yy,rstride=1,cstride=1)       
+    title('t=%.2f'%t)
+    savefig('f2_%d.png'%ii,dpi=150)
 
+    figure(3)
+    clf()
+    cax = imshow(yy,vmin=-2.0, vmax=2.0, extent=[0,Lx,0,Lx])
+    cbar = colorbar(cax)
+    title('t=%.2f'%t)
+    savefig('f3_%d.png'%ii,dpi=150)
 
-fig=figure(3)
-clf()
-ax = fig.gca(projection='3d')
-ax.plot_wireframe(x,z,y)       
+    '''
+    fig=figure(3)
+    clf()
+    ax = fig.gca(projection='3d')
+    ax.plot_wireframe(x,z,y)       
+    '''
 
-fig=figure(4)
-clf()
-ax = fig.gca(projection='3d')
-ax.plot_trisurf(x,z,y)       
-ax.set_xlabel('X [m]')
-ax.set_ylabel('Z [m]')
-
-hr, hi = getho(ocean)
-
-fig=figure(5)
-clf()
-ax = fig.gca(projection='3d')
-ax.plot_trisurf(x,z,hr)   
-
+    fig=figure(4)
+    clf()
+    ax = fig.gca(projection='3d')
+    ax.plot_trisurf(x,z,y)       
+    ax.set_xlabel('X [m]')
+    ax.set_ylabel('Z [m]')
+    title('t=%.2f'%t)
+    savefig('f4_%d.png'%ii,dpi=150)
+    '''
+    hr, hi = getho(ocean)
+    fig=figure(5)
+    clf()
+    ax = fig.gca(projection='3d')
+    ax.plot_trisurf(x,z,hr)   
+    '''
 
 
 show()
