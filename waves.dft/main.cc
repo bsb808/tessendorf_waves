@@ -536,7 +536,7 @@ int main(int argc, char *argv[]) {
 		/*if (kb.getKeyState(KEY_UP))    alpha += 180.0f*elapsed0;
 		if (kb.getKeyState(KEY_DOWN))  alpha -= 180.0f*elapsed0;
 		if (kb.getKeyState(KEY_LEFT))  beta  -= 180.0f*elapsed0;
-		if (kb.getKeyState(KEY_RIGHT)) beta  += 180.0f*elapsed0;
+asdewws		if (kb.getKeyState(KEY_RIGHT)) beta  += 180.0f*elapsed0;
 		jp[0] = js.joystickPosition(0);
 		jp[1] = js.joystickPosition(1);
 		yaw   += jp[1].x*elapsed0*90;
@@ -549,6 +549,7 @@ int main(int argc, char *argv[]) {
 		pitch += -mst.axis[1]*elapsed0*20;
 
 		key_up    = kb.getKeyState(KEY_W);
+		//printf("%d\n",key_up);
 		key_down  = kb.getKeyState(KEY_S);
 		key_left  = kb.getKeyState(KEY_A);
 		key_right = kb.getKeyState(KEY_D);

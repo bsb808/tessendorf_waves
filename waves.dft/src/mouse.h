@@ -7,7 +7,7 @@
 #include <pthread.h>
 #include <linux/input.h>
 
-#define MOUSE_DEV "/dev/input/event1"
+#define MOUSE_DEV "/dev/input/event17"
 
 struct mouse_state {
 	int axis[2];

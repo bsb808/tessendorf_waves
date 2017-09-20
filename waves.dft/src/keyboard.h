@@ -7,7 +7,7 @@
 #include <pthread.h>
 #include <linux/input.h>
 
-#define KEYBOARD_DEV "/dev/input/event0"
+#define KEYBOARD_DEV "/dev/input/event15"
 
 struct keyboard_state {
 	signed short keys[KEY_CNT];
