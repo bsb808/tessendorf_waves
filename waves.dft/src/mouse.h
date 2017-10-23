@@ -7,7 +7,7 @@
 #include <pthread.h>
 #include <linux/input.h>
 
-#define MOUSE_DEV "/dev/input/event17"
+#define MOUSE_DEV "/dev/input/event11"
 
 struct mouse_state {
 	int axis[2];
@@ -22,6 +22,7 @@ class cMouse {
 	input_event *mouse_ev;
 	mouse_state mouse_st;
 	char name[256];
+	bool left_button;
 
   protected:
   public:
@@ -30,6 +31,8 @@ class cMouse {
 	static void* loop(void* obj);
 	void readEv();
 	mouse_state getMouseState();
+	bool getLeftButton();
+
 };
 
 #endif

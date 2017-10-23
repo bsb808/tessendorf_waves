@@ -540,7 +540,9 @@ int main(int argc, char *argv[]) {
 	cBuffer buffer(WIDTH, HEIGHT);
 
 	// controls
-	cKeyboard kb; int key_up, key_down, key_left, key_right, keyx, keyz;
+	cKeyboard kb; 
+	int key_up, key_down, key_left, key_right, keyx, keyz, key_hi, key_lo;
+			
 	cJoystick js; joystick_position jp[2];
 	cMouse    ms; mouse_state mst;
 
@@ -560,7 +562,7 @@ int main(int argc, char *argv[]) {
 	// Parameters
 	int N = 64;
 	float A = 0.0005f;
-	vector2 w = vector2(10.0f,0.0f);
+	vector2 w = vector2(1.0f,0.0f);
 	float L = 64.0;
 	std::cout << "Creating ocean environment:" << std::endl;
 	std::cout << "N (grid points) = " << N << std::endl;
@@ -582,7 +584,21 @@ int main(int argc, char *argv[]) {
 	// rotation angles and viewpoint
 	float alpha =   0.0f, beta =   0.0f, gamma =   0.0f,
 	      pitch =   0.0f, yaw  =   0.0f, roll  =   0.0f,
-	      x     =   0.0f, y    =   0.0f, z     = -20.0f;
+	      x     =   0.0f, y    =   -50.0f, z     = -20.0f;
+
+	std::cout << "Keyboard commands:" << std::endl;
+	std::cout << "\tW \t Fwd" << std::endl;
+	std::cout << "\tS \t Rev" << std::endl;
+	std::cout << "\tA \t Left" << std::endl;
+	std::cout << "\tD \t Right" << std::endl;
+	std::cout << "\tQ \t Up" << std::endl;
+	std::cout << "\tZ \t Down" << std::endl;
+	std::cout << "Within OpenGL Window..." << std::endl;
+	std::cout << "\tf \t Fullscreen" << std::endl;
+	std::cout << "\tv \t Video grab" << std::endl;
+	std::cout << "\tg \t Screen grab" << std::endl;
+
+	std::cout << "Hold left mouse button down to move around/tilt" << std::endl;
 
 	if (logging) {
 	  ocean.initlog();
@@ -610,10 +626,11 @@ int main(int argc, char *argv[]) {
 		elapsed0 = t0.elapsed(true);
 
 		// update frame based on input state
-		/*if (kb.getKeyState(KEY_UP))    alpha += 180.0f*elapsed0;
+		if (kb.getKeyState(KEY_UP))    alpha += 180.0f*elapsed0;
 		if (kb.getKeyState(KEY_DOWN))  alpha -= 180.0f*elapsed0;
 		if (kb.getKeyState(KEY_LEFT))  beta  -= 180.0f*elapsed0;
-asdewws		if (kb.getKeyState(KEY_RIGHT)) beta  += 180.0f*elapsed0;
+		if (kb.getKeyState(KEY_RIGHT)) beta  += 180.0f*elapsed0;
+		/*
 		jp[0] = js.joystickPosition(0);
 		jp[1] = js.joystickPosition(1);
 		yaw   += jp[1].x*elapsed0*90;
@@ -622,8 +639,20 @@ asdewws		if (kb.getKeyState(KEY_RIGHT)) beta  += 180.0f*elapsed0;
 		z     +=  cos(-yaw*M_PI/180.0f)*jp[0].y*elapsed0*30 + sin(-yaw*M_PI/180.0f)*jp[0].x*elapsed0*30;
 		*/
 		mst = ms.getMouseState();
-		yaw   +=  mst.axis[0]*elapsed0*20;
-		pitch += -mst.axis[1]*elapsed0*20;
+		bool lb = ms.getLeftButton();
+		//printf("left_button: %d\n",lb);
+		//printf("Moust Button [%d] = %d \n",
+		//       BTN_LEFT,mst.button[BTN_LEFT]);
+		yaw   +=  mst.axis[0]*lb*elapsed0*20;
+		pitch += -mst.axis[1]*lb*elapsed0*20;
+		//printf("Mouse 0: %f, 1: %f\n",yaw,pitch);
+		//printf("Mouse Buttons %d:%d:%d\n",
+		//       mst.button[0],mst.button[1],mst.button[2]);
+
+		key_hi = kb.getKeyState(KEY_Q);
+		key_lo = kb.getKeyState(KEY_Z);
+		y += (key_lo-key_hi)*elapsed0*30;
+		 
 
 		key_up    = kb.getKeyState(KEY_W);
 		//printf("%d\n",key_up);
@@ -642,7 +671,7 @@ asdewws		if (kb.getKeyState(KEY_RIGHT)) beta  += 180.0f*elapsed0;
 		View  = glm::mat4(1.0f);
 		View  = glm::rotate(View, pitch, glm::vec3(-1.0f, 0.0f, 0.0f));
 		View  = glm::rotate(View, yaw,   glm::vec3(0.0f, 1.0f, 0.0f));
-		View  = glm::translate(View, glm::vec3(x, -50, z));
+		View  = glm::translate(View, glm::vec3(x, y, z));
 		light_position = glm::vec3(1000.0f, 100.0f, -1000.0f);
 
 		if (video_grab) {
