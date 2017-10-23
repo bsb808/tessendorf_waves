@@ -1,7 +1,10 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <sstream>
+#include <iostream>
 #include <fstream>
+#include <iomanip>      // std::setprecision
+
 
 #include <GL/glew.h>
 
@@ -46,6 +49,9 @@ struct complex_vector_normal {	// structure used with discrete fourier transform
 
 class cOcean {
   private:
+  bool logging; // logging flag
+  std::ofstream logfile;	  
+
 	bool geometry;				// flag to render geometry or surface
 
 	float g;				// gravity constant
@@ -72,6 +78,12 @@ class cOcean {
 	~cOcean();
 	void release();
 
+  void initlog(void);
+  void stoplog(void);
+  void closelog(void);
+  void writedata(float t);
+
+
 	float dispersion(int n_prime, int m_prime);		// deep water
 	float phillips(int n_prime, int m_prime);		// phillips spectrum
 	complex hTilde_0(int n_prime, int m_prime);
@@ -94,6 +106,8 @@ cOcean::cOcean(const int N, const float A, const vector2 w, const float length, 
 	fft            = new cFFT(N);
 	vertices       = new vertex_ocean[Nplus1*Nplus1];
 	indices        = new unsigned int[Nplus1*Nplus1*10];
+	
+	logging = false;
 
 	int index;
 
@@ -278,6 +292,50 @@ complex_vector_normal cOcean::h_D_and_n(vector2 x, float t) {
 	return cvn;
 }
 
+void cOcean::initlog(void){
+  logging = true;
+  //logfile.open("test.csv");
+  std::cout << "Writing log file\n";
+  logfile.open("test.dat",std::ios::binary);
+  printf("size GLfloat: %ld\n",sizeof(GLfloat));
+  printf("size float: %ld\n",sizeof(float));
+
+}
+
+void cOcean::stoplog(void){
+  logging = false;
+}
+void cOcean::closelog(void){
+  logging = false;
+  logfile.close();
+}
+
+void cOcean::writedata(float t){
+  if (! logging){
+    printf("Warning - trying write data, but logging isn't active!\n");
+    return;
+  }
+  int index;
+  /*
+  std::ostringstream oss;
+  oss.setf(std::ios::fixed, std::ios::floatfield);
+  oss.precision(5);
+  oss << t << ",";
+  */
+  logfile.write(reinterpret_cast<const char*>(& t),sizeof(float));
+  for (int m_prime = 0; m_prime < N; m_prime++) {
+    for (int n_prime = 0; n_prime < N; n_prime++) {
+      index = m_prime * Nplus1 + n_prime;
+      //oss << vertices[index].y << ",";
+      logfile.write(reinterpret_cast<const char*>(& vertices[index].y),
+		    sizeof(GLfloat));
+      //printf("%d: %f \n",index,vertices[index].y);
+    }
+  }
+    //logfile << oss.str() << '\n';
+  //std::cout << oss.str() << '\n';
+}
+  
 void cOcean::evaluateWaves(float t) {
 	float lambda = -1.0;
 	int index;
@@ -491,13 +549,29 @@ int main(int argc, char *argv[]) {
 
 	// application is active.. fullscreen flag.. screen grab.. video grab..
 	bool active = true, fullscreen = false, screen_grab = false, video_grab = false;
+	// For writting data to a file
+	bool logging = true;
 
 	// setup an opengl context.. initialize extension wrangler
 	SDL_Surface *screen = my_SDL_init(WIDTH, HEIGHT, fullscreen);
 	SDL_Event event;
 
-	// ocean simulator
-	cOcean ocean(64, 0.0005f, vector2(0.0f,32.0f), 64, false);
+	// Ocean simulator
+	// Parameters
+	int N = 64;
+	float A = 0.0005f;
+	vector2 w = vector2(10.0f,0.0f);
+	float L = 64.0;
+	std::cout << "Creating ocean environment:" << std::endl;
+	std::cout << "N (grid points) = " << N << std::endl;
+	std::cout << "A (Phillips Constant) = " << A << std::endl;
+	float H3 = std::pow(w.length(),2.0)/9.81*sqrt(0.032);
+
+	std::cout << "w (Wind vector) = [ " << w.x << " , "
+		  << w.y << "] m/s : Sig. Wave Height = " 
+		  << H3 << " m"<<std::endl;
+	std::cout << "L (Field size) = " << L << " m" << std::endl;
+	cOcean ocean(N,A,w,L, false);
 
 	// model view projection matrices and light position
 	glm::mat4 Projection = glm::perspective(45.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 1000.0f); 
@@ -510,6 +584,9 @@ int main(int argc, char *argv[]) {
 	      pitch =   0.0f, yaw  =   0.0f, roll  =   0.0f,
 	      x     =   0.0f, y    =   0.0f, z     = -20.0f;
 
+	if (logging) {
+	  ocean.initlog();
+	}
 	while(active) {
 		while (SDL_PollEvent(&event)) {
 			switch (event.type) {
@@ -573,6 +650,10 @@ asdewws		if (kb.getKeyState(KEY_RIGHT)) beta  += 180.0f*elapsed0;
 			ocean.render(elapsed_video, light_position, Projection, View, Model, true);
 			SDL_GL_SwapBuffers();
 			buffer.save(true);
+			// log to file
+			ocean.writedata(elapsed_video);
+			//ocean.closelog();
+		       
 		} else {
 			ocean.render(t1.elapsed(false), light_position, Projection, View, Model, false);
 			SDL_GL_SwapBuffers();
@@ -581,6 +662,9 @@ asdewws		if (kb.getKeyState(KEY_RIGHT)) beta  += 180.0f*elapsed0;
 		if (screen_grab) { screen_grab = false; buffer.save(false); }
 		//if (video_grab)  { elapsed_video += video.elapsed(true); if (elapsed_video >= 1/30.0) { buffer.save(true); elapsed_video = 0.0; } }
 	}
+
+
+	ocean.closelog();
 
 	ocean.release();
 
