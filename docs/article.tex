@@ -1,0 +1,178 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% latex_template_ieee_bbing.tex
+%
+% 28.02.2008  bsb Created 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Final - 2 column style
+%\documentclass[10pt,final,journal]{../latexlib/latex_ieee/IEEEtran}
+% Draft - single column style
+\documentclass[11pt,draftcls,journal,onecolumn]{../latexlib/latex_ieee/IEEEtran}
+
+% If the IEEEtran.cls has not been installed into the LaTeX system files, 
+% manually specify the path to it:
+% \documentclass[conference]{../sty/IEEEtran} 
+
+% Gives LaTeX2e the abilsity to do double column
+%% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor IEEEtran}
+
+% From thesis main (bbing)
+\usepackage{amssymb,longtable,dcolumn}
+
+% to use pdflatex
+% Standard bbing packages
+\usepackage{cite}      % Written by Donald Arseneau
+\usepackage{graphicx}  % Written by David Carlisle and Sebastian Rahtz
+\usepackage{url}       % Written by Donald Arseneau
+\usepackage{amssymb,longtable,dcolumn}
+\usepackage{bm}
+%\usepackage{subfigure}
+%\usepackage{stfloats}  % Written by Sigitas Tolusis
+\usepackage[caption=false,font=footnotesize]{subfig}
+%\usepackage{fixltx2e}
+\usepackage{colortbl}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{units}
+\usepackage{../latexlib/latex_cmds/math_bbing}
+\usepackage{acronym}
+\usepackage{csvsimple}
+\usepackage{../latexlib/latex_cmds/my_acronyms}
+\usepackage{color,soul}
+\DeclareRobustCommand{\hlr}[1]{{\sethlcolor{red}\hl{#1}}}
+\DeclareRobustCommand{\hlg}[1]{{\sethlcolor{green}\hl{#1}}}
+\DeclareRobustCommand{\hlb}[1]{{\sethlcolor{blue}\hl{#1}}}
+\DeclareRobustCommand{\hly}[1]{{\sethlcolor{yellow}\hl{#1}}}
+
+\begin{document}
+
+\newtheorem{remark}{Remark}
+\renewcommand{\theremark}{\unskip}
+
+
+\input{../latexlib/latex_cmds/Commands}  % shortcuts to thesis stuff
+\input{../latexlib/latex_cmds/defs}
+%\include{./latex_cmds/Commands}  % shortcuts to thesis stuff
+%\include{./latex_cmds/defs}
+
+
+% set the figure default size
+\newcommand{\SF}{0.2}
+\newcommand{\SFb}{0.45}
+\newcommand{\SFPic}{0.45}
+\newcommand{\SFPlot}{0.45}
+\newcommand{\SFc}{0.25}
+% Just a lazy way of setting the figure width (percentage of text width)
+% 0.7 works well for 1 column
+% 0.4 works well for 2 column
+\newcommand{\FigWidth}{\SFb}
+
+% Use this one for the draft version
+\newcommand{\scaleOneTwo}[2] {\scalebox{#1}}
+% Use this one for the two column version
+%\newcommand{\scaleOneTwo}[2] {\scalebox{#2}}
+
+% Graphics for this paper
+\graphicspath{{images/}}
+
+
+% paper title
+%\title{Towards an Experimentally Validated Plume Model to Support Robotic Plume Characterization}
+\title{Wave Spectra Notes}
+
+% author names and affiliations
+% use a multiple column layout for up to three different
+% affiliations
+\author{Brian~Bingham$^{1}$% <-this % stops a space
+\thanks{$^{1}$ Brian~Bingham is with the Department of Mechanical and Aerospace Engineering, Naval Postgraduate School, Monterey, CA 93950, USA. {\tt\small bbingham@nps.edu}}%
+}
+
+% make the title area
+\maketitle
+
+%\begin{abstract}
+%Abstract
+%\end{abstract}
+% no keywords
+
+\IEEEpeerreviewmaketitle
+
+\section{Introduction}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque sit amet posuere mi. Etiam pretium ipsum massa. Curabitur dignissim quam in semper suscipit. Morbi sodales diam consequat ex euismod cursus \cite{bingham03phd}.
+
+\section{Background}
+ Curabitur cursus ligula eget nisi fermentum imperdiet. Nam commodo massa eget nisl lobortis, vel consequat sem gravida. Sed turpis lorem, aliquet sed ultricies eu, pharetra consectetur odio. Curabitur id iaculis dolor. 
+
+\section{Simplified Models for Control}
+The horizontal-plane maneuvering model uses the state vector $\bm{\nu}=[u,v,r]^T$ where the velocities $u$, $v$ and $r$ are in the surge, sway and yaw directions respectively. 
+
+Euler angles for angular deplacements/velocities are
+\begin{itemize}
+\item roll $\phi$, $p=\dot{\phi}$
+\item pitch $\theta$, $q=\dot{\theta}$
+\item yaw $\psi$, $r=\dot{\psi}$
+\end{itemize}
+
+\section{Maneuvering Models}
+\subsection{Nonlinear Maneuvering Model based on Second-order Modulus Functions}
+\beqn
+\underbrace{\bm{M}_{RB}\dot{\bm{\nu}}+\bm{C}_{RB}(\bm{\nu})\bm{\nu}}_\text{rigid-body forces} +
+\underbrace{\bm{M}_A\dot{\bm{\nu}}_r + \bm{C}_A(\bm{\nu}_r)\bm{\nu}_r + 
+\bm{D}(\bm{\nu}_r)\bm{\nu}_r}_\text{hydrodynamic forces}
+= \bm{\tau}+\bm{\tau}_{wind}+\bm{\tau}_{waves}
+\label{e:fossenmodel}
+\eeqn
+where $\bm{\nu}_r$ is the velocity vector relative to an irrotational water current $\bm{\nu}_c$, i.e., $\bm{\nu}=\bm{\nu}_r+\bm{\nu}_c$.  The rigid body kinetics are represented by the rigid body mass $\bm{M}_{RB}$ 
+\beqn
+\bm{M}_{RB}= \left[ 
+\begin{array}{ccc}
+m & 0 & 0 \\
+0 & m & m x_g \\
+0 & m x_g & I_z 
+\end{array} \right],
+\eeqn
+where $m$ is the mass of the vehicle, $I_z$ is the moment of inertia about the body-centered z-axis and $x_g$ is distance along the x-axis from the origin of the body-centered frame to the center of gravity of the vessel.  The second rigid body term is the Coriolis-centripetal matrix,
+\beqn
+\bm{C}_{RB}(\bm{\nu})= \left[ 
+\begin{array}{ccc}
+0 & 0 & -m(x_gr+v) \\
+0 & 0 & mu \\
+m(x_gr+v) & -mu  & 0 
+\end{array} \right].
+\eeqn
+Equivalently we can express the same model in non-matrix form, where the speed equation in the surge direction is 
+\beqn
+\underbrace{m \dot{u}}_\text{RB inertia}  
+- \underbrace{m x_g r^2}_\text{RB centripetal}
+- \underbrace{mvr}_\text{RB Coriolis}
+=
+\underbrace{X_{\dot{u}} \dot{u}_r}_\text{AM inertia}
++ \underbrace{Y_{\dot{v}}v_r r}_\text{AM Coriolis}
++ \underbrace{Y_{\dot{r}}r^2}_\text{AM centripetal}
++ \underbrace{X_u u + X_{u|u|}|u|u}_\text{Drag} 
++ \underbrace{\tau}_\text{Thrust}
+\label{e:fullu}
+\eeqn
+
+
+\hl{What/Why is the quadratic yaw drag expressed as $N_{v|v|}|v|v$?  Seems like it would be $N_{r|r|}|r|r$.}
+
+That is all.
+
+% standard IEEE bibliography style from:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/supported/IEEEtran/bibtex
+%\bibliographystyle{../latex_ieee/IEEEtran}
+\bibliographystyle{apalike}
+% argument is your BibTeX string definitions and bibliography database(s)
+\bibliography{../bibtexdatabase/bbing_master}
+%\bibliography{./latex_ieee/IEEEabrv}
+
+% if you will not have a photo at all:
+
+% that's all folks
+
+
+\end{document}
+
+
