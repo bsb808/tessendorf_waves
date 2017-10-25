@@ -1,0 +1,132 @@
+\documentclass[11pt]{article}
+%\usepackage[firstpage]{draftwatermark}
+\usepackage{times}
+\usepackage{pdfpages}
+\usepackage{fullpage}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{indentfirst}
+\usepackage{subcaption}
+\usepackage{units}
+
+% Added by bsb
+\usepackage{color,soul}
+\DeclareRobustCommand{\hlr}[1]{{\sethlcolor{red}\hl{#1}}}
+\DeclareRobustCommand{\hlg}[1]{{\sethlcolor{green}\hl{#1}}}
+\DeclareRobustCommand{\hlb}[1]{{\sethlcolor{blue}\hl{#1}}}
+\DeclareRobustCommand{\hly}[1]{{\sethlcolor{yellow}\hl{#1}}}
+
+
+\setcounter{secnumdepth}{4}
+\graphicspath{{images/}}
+\pagestyle{fancy}
+
+% Conditional for notes
+\newif\ifnotes
+\notesfalse
+
+
+\newcommand{\proposaltitle}{Wave Spectra Notes}
+
+\newcommand{\proposalnumber}{\proposaltitle}
+
+\addtolength{\headheight}{2em}
+\addtolength{\headsep}{1.5em}
+\lhead{\proposalnumber}
+\rhead{}
+
+\newcommand{\capt}[1]{\caption{\small \em #1}}
+
+\cfoot{\small Brian Bingham \today \\ \thepage}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\newenvironment{xitemize}{\begin{itemize}\addtolength{\itemsep}{-0.75em}}{\end{itemize}}
+\newenvironment{tasklist}{\begin{enumerate}[label=\textbf{\thesubsubsection-\arabic*},ref=\thesubsubsection-\arabic*,leftmargin=*]}{\end{enumerate}}
+\newcommand\todo[1]{{\bf TODO: #1}}
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{4}
+
+\makeatletter
+\newcommand*{\compress}{\@minipagetrue}
+\makeatother
+
+%\renewcommand{\chaptername}{Volume}
+%\renewcommand{\thesection}{\Roman{section}}
+%\renewcommand{\thesubsection}{\Roman{section}-\Alph{subsection}}
+
+\begin{document}
+
+\newpage
+% Title Page
+\setcounter{page}{1}
+\begin{center}
+{\huge \proposaltitle}
+\end{center}
+
+\section{Overview}
+The goal is to consolodate some of the existing literature and notes about wave spectra as they pertain to generating simple, but physically realizable, wave fields for simulation.
+
+\section{Simple Wave Spectra}
+Techet notes the general form of a fully-developed wave spectra, as a function of temporal frequency,
+\begin{equation}
+S(\omega) = \frac{C}{\omega^5} e^{\left[ -D/\omega^4 \right]}.
+\label{e:form}
+\end{equation}
+A wave spectra can be equivalently expressed as a function of three different variables:
+\begin{enumerate}
+\item $\omega$: \emph{angular frequency} in \unitfrac[]{rad}{s},
+\item $f$: \emph{ordinary frequency} or just \emph{frequency}, $\omega=2 \pi f$, in \unitfrac[]{cycles}{s} or \unit[]{Hz}, or
+\item $k$: \emph{wave number}, $k = 2 \pi/\lambda$, in \unitfrac[]{rad}{m}.
+\end{enumerate}
+
+We can relate a spectrum expressed in angular frequency, $S(\omega)$, as a spectrum exrpessed in ordinary frequency, $S'(f)$ as \footnote{We use the prime notation  in $S(\omega)$, $S'(f)$, $S''(k)$ to differentiate between expressions of equivalent spectra with different independent variables.}
+\[ S'(f) = S(\omega=2 \pi f) \frac{d\omega}{df} = (2 \pi) S(\omega=2 \pi f)\]
+where the factor of $2 \pi$ insures that the area under the curve stays the same \footnote{\url{http://www.wikiwaves.org/Ocean-Wave_Spectra}}.
+
+Next we need to specify the dispersion relation\footnote{\url{https://en.wikipedia.org/wiki/Dispersion_(water_waves)}}.  For deep water 
+\begin{eqnarray}
+\omega = \sqrt{gk} \\
+c_p = \frac{\omega}{k}=\sqrt{\frac{g}{k}} \\
+c_g = \frac{\partial \omega}{\partial k} = \frac{1}{2} \sqrt{\frac{g}{k}}
+\end{eqnarray}
+were $c_p$ is the phase velocity and $c_g$ is the group velocity.
+
+The process of relating spectra expressed as functions of angular frequency ($\omega$) or wavenumber ($k$) is described in \cite{plant09ocean}.  The constraint is that total wave height variance must be indpendent of independent variable (area under the curve doesn't change), which is expressed as
+\[
+\int S''(k) k dk = \int S'(f) df.
+\]
+If we follow the argument of equating the energy density in spectral bands \cite{}, then
+\[ S''(k) = S'(f) \frac{1}{k} \frac{df}{dk}\]
+and since
+\[ f = \frac{\omega}{2 \pi} \rightarrow \frac{df}{dk}=\frac{d\omega}{dk}\frac{1}{2 \pi} \]
+we can substitute the definition of the group velocity
+\[ c_g = \frac{\partial \omega}{\partial k} \]
+so that in general
+\[ S''(k) = S'(f) \frac{c_g}{2 \pi k} = S(\omega) \frac{c_g}{k}\]
+and specifically for the deep water definition of $c_g$
+\[ S''(k) = 
+S'\left(f=\frac{\sqrt{gk}}{2\pi}\right) \frac{\sqrt{g}}{4 \pi \left(k^{3/2}\right)} = 
+S\left(\omega=\sqrt{gk}\right)\frac{\sqrt{g}}{2 \left(k^{3/2}\right)}.\]
+If we apply this to (\ref{e:form}) we can express the general form of a fully-developed spectrum in deep-water as
+\begin{eqnarray}
+S(\omega) = \frac{C}{\omega^5} e^{\left[ -D/\omega^4 \right]} \\
+S''(k) = \frac{C}{2 g^2 k^4} e^{\left[-D/(gk)^2\right]}
+\end{eqnarray}
+
+ 
+We need to account for the spectra written in terms of $f$
+
+
+\cite{tessendorf99simulating}
+
+\newpage
+\setcounter{page}{1}
+\bibliographystyle{ieee/IEEEtran}
+% argument is your BibTeX string definitions and bibliography database(s)
+\bibliography{refs}
+
+\end{document}

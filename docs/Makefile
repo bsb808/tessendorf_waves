@@ -5,7 +5,7 @@ DVIPS = dvips
 PS2PDF = ps2pdf
 VIEWPDF = okular
 
-BASE_NAME = proposal
+BASE_NAME = spectra_notes
 
 all: $(BASE_NAME).pdf
 
