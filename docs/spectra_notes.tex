@@ -70,10 +70,10 @@
 \section{Overview}
 The goal is to consolodate some of the existing literature and notes about wave spectra as they pertain to generating simple, but physically realizable, wave fields for simulation.
 
-\section{Simple Wave Spectra}
-Techet notes the general form of a fully-developed wave spectra, as a function of temporal frequency,
+\section{Relating Spectra in Space and Time}
+Techet notes\footnote{\url{https://ocw.mit.edu/courses/mechanical-engineering/2-22-design-principles-for-ocean-vehicles-13-42-spring-2005/readings/lec6_wavespectra.pdf}} the general form of a fully-developed wave spectra, as a function of temporal frequency,
 \begin{equation}
-S(\omega) = \frac{C}{\omega^5} e^{\left[ -D/\omega^4 \right]}.
+S(\omega) = \frac{C}{\omega^5} \exp{\left[ -D/\omega^4 \right]}.
 \label{e:form}
 \end{equation}
 A wave spectra can be equivalently expressed as a function of three different variables:
@@ -84,7 +84,7 @@ A wave spectra can be equivalently expressed as a function of three different va
 \end{enumerate}
 
 We can relate a spectrum expressed in angular frequency, $S(\omega)$, as a spectrum exrpessed in ordinary frequency, $S'(f)$ as \footnote{We use the prime notation  in $S(\omega)$, $S'(f)$, $S''(k)$ to differentiate between expressions of equivalent spectra with different independent variables.}
-\[ S'(f) = S(\omega=2 \pi f) \frac{d\omega}{df} = (2 \pi) S(\omega=2 \pi f)\]
+\begin{equation} S'(f) = S(\omega=2 \pi f) \frac{d\omega}{df} = (2 \pi) S(\omega=2 \pi f)\end{equation}
 where the factor of $2 \pi$ insures that the area under the curve stays the same \footnote{\url{http://www.wikiwaves.org/Ocean-Wave_Spectra}}.
 
 Next we need to specify the dispersion relation\footnote{\url{https://en.wikipedia.org/wiki/Dispersion_(water_waves)}}.  For deep water 
@@ -96,32 +96,67 @@ c_g = \frac{\partial \omega}{\partial k} = \frac{1}{2} \sqrt{\frac{g}{k}}
 were $c_p$ is the phase velocity and $c_g$ is the group velocity.
 
 The process of relating spectra expressed as functions of angular frequency ($\omega$) or wavenumber ($k$) is described in \cite{plant09ocean}.  The constraint is that total wave height variance must be indpendent of independent variable (area under the curve doesn't change), which is expressed as
-\[
+\begin{equation}
 \int S''(k) k dk = \int S'(f) df.
-\]
+\end{equation}
 If we follow the argument of equating the energy density in spectral bands \cite{}, then
-\[ S''(k) = S'(f) \frac{1}{k} \frac{df}{dk}\]
+\begin{equation} S''(k) = S'(f) \frac{1}{k} \frac{df}{dk}\end{equation}
 and since
-\[ f = \frac{\omega}{2 \pi} \rightarrow \frac{df}{dk}=\frac{d\omega}{dk}\frac{1}{2 \pi} \]
+\begin{equation} f = \frac{\omega}{2 \pi} \rightarrow \frac{df}{dk}=\frac{d\omega}{dk}\frac{1}{2 \pi} \end{equation}
 we can substitute the definition of the group velocity
-\[ c_g = \frac{\partial \omega}{\partial k} \]
+\begin{equation} c_g = \frac{\partial \omega}{\partial k} \end{equation}
 so that in general
-\[ S''(k) = S'(f) \frac{c_g}{2 \pi k} = S(\omega) \frac{c_g}{k}\]
+\begin{equation} S''(k) = S'(f) \frac{c_g}{2 \pi k} = S(\omega) \frac{c_g}{k}\end{equation}
 and specifically for the deep water definition of $c_g$
-\[ S''(k) = 
+\begin{equation} S''(k) = 
 S'\left(f=\frac{\sqrt{gk}}{2\pi}\right) \frac{\sqrt{g}}{4 \pi \left(k^{3/2}\right)} = 
-S\left(\omega=\sqrt{gk}\right)\frac{\sqrt{g}}{2 \left(k^{3/2}\right)}.\]
+S\left(\omega=\sqrt{gk}\right)\frac{\sqrt{g}}{2 \left(k^{3/2}\right)}.
+\label{e:ss}
+\end{equation}
 If we apply this to (\ref{e:form}) we can express the general form of a fully-developed spectrum in deep-water as
 \begin{eqnarray}
-S(\omega) = \frac{C}{\omega^5} e^{\left[ -D/\omega^4 \right]} \\
-S''(k) = \frac{C}{2 g^2 k^4} e^{\left[-D/(gk)^2\right]}
+S(\omega) = \frac{C}{\omega^5} \exp{\left[ -D/\omega^4 \right]} \\
+S''(k) = \frac{C}{2 g^2 k^4} \exp{\left[-D/(gk)^2\right]}
 \end{eqnarray}
 
- 
-We need to account for the spectra written in terms of $f$
+\section{Phillips Spectrum}
+The generic Phillips spectrum is reported by \cite{tessendorf99simulating} as 
+\begin{equation} S_{Ph}''(k)= \frac{A}{k^4} \exp{\left[ - \frac{1}{(kL)^2} \right]} 
+= \frac{A}{k^4} \exp{\left[ - \frac{g^2}{(k^2)(U^4)} \right]} .
+\end{equation}
+We can convert this to an expression in terms of angular frequency. Using (\ref{e:ss}) we find
+\begin{equation}
+S(\omega) = S''\left(k=\frac{\omega^2}{g}\right) 2 \frac{\omega^3}{g^2}
+\end{equation}
+which lead to
+\begin{equation}
+S_{Ph}(\omega) = \frac{A(2)(g^2)}{\omega^5} \exp{\left[ - \frac{ (g/U)^4 }{\omega^4} \right]}
+\end{equation}
+which agrees with the general form given in (\ref{e:form}). This is close to, but not exactly the same as the expression derived in \cite{chen2013onthe} (see equation (7)).
 
+\section{Pierson-Moskowitz}
+The Pierson-Moskowitz spectrum can be expressed as\footnote{\url{http://www.wikiwaves.org/Ocean-Wave_Spectra}}
+\begin{equation}
+S_{PM}(\omega)=\frac{\alpha g^2}{\omega^5} \exp{\left[ -\beta \left(\frac{\omega_o}{\omega}\right)^4 \right]} =\frac{\alpha g^2}{\omega^5} \exp{\left[ -\beta \left(\frac{g}{U_{19.5}(\omega)}\right)^4 \right]}
+\end{equation}
+where $\alpha=8.1(10^{-3})$ and $\beta=0.74$ and $U_{19.5}$ is the wind speed at \unit[19.5]{m} above the sea surface.  Furthermore the relationship between significant wave height ($H_{1/3}$) and wind velocity is
+\begin{equation}
+H_{1/3} = 0.21 \frac{\left(U_{19.5}\right)^2}{g}
+\end{equation}
+which lead to 
+\begin{equation}
+S_{PM}(\omega)=\frac{\alpha g^2}{\omega^5} \exp{\left[ -\beta \left(\frac{(0.21(g))^2}{H_{1/3}^2}\right) \frac{1}{\omega^4} \right]}
+\end{equation}
+This agrees with the expression Techet provides the Pierson-Moskowitz spectrum 
+\begin{equation}
+S_{PM}(\omega)=\frac{\alpha g^2}{\omega^5} \exp{\left[ - \frac{(0.032)g^2}{\left(H_{1/3}\right)^2} \frac{1}{\omega^4} \right]}.
+\end{equation} 
+Applying (\ref{e:ss}) to express the spectrum in terms of wavenumber yields
+\begin{equation}
+S''_{PM}(k) = \frac{\alpha}{k^4} \exp{\left[ -\beta (0.21^2) \frac{1}{(H_{1/3})^2}\frac{1}{k^2} \right]}.
+\end{equation}
 
-\cite{tessendorf99simulating}
+\section{Relating Phillips and Pierson-Moskowitz Spectra}
 
 \newpage
 \setcounter{page}{1}
