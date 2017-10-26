@@ -123,10 +123,12 @@ S''(k) = \frac{C}{2 g^2 k^4} \exp{\left[-D/(gk)^2\right]}
 The generic Phillips spectrum is reported by \cite{tessendorf99simulating} as 
 \begin{equation} S_{Ph}''(k)= \frac{A}{k^4} \exp{\left[ - \frac{1}{(kL)^2} \right]} 
 = \frac{A}{k^4} \exp{\left[ - \frac{g^2}{(k^2)(U^4)} \right]} .
+\label{e:phk}
 \end{equation}
 We can convert this to an expression in terms of angular frequency. Using (\ref{e:ss}) we find
 \begin{equation}
 S(\omega) = S''\left(k=\frac{\omega^2}{g}\right) 2 \frac{\omega^3}{g^2}
+\label{e:phw}
 \end{equation}
 which lead to
 \begin{equation}
@@ -142,22 +144,41 @@ S_{PM}(\omega)=\frac{\alpha g^2}{\omega^5} \exp{\left[ -\beta \left(\frac{\omega
 where $\alpha=8.1(10^{-3})$ and $\beta=0.74$ and $U_{19.5}$ is the wind speed at \unit[19.5]{m} above the sea surface.  Furthermore the relationship between significant wave height ($H_{1/3}$) and wind velocity is
 \begin{equation}
 H_{1/3} = 0.21 \frac{\left(U_{19.5}\right)^2}{g}
+\label{e:pmh}
 \end{equation}
 which lead to 
 \begin{equation}
 S_{PM}(\omega)=\frac{\alpha g^2}{\omega^5} \exp{\left[ -\beta \left(\frac{(0.21(g))^2}{H_{1/3}^2}\right) \frac{1}{\omega^4} \right]}
+\label{e:pmh3}
 \end{equation}
 This agrees with the expression Techet provides the Pierson-Moskowitz spectrum 
 \begin{equation}
 S_{PM}(\omega)=\frac{\alpha g^2}{\omega^5} \exp{\left[ - \frac{(0.032)g^2}{\left(H_{1/3}\right)^2} \frac{1}{\omega^4} \right]}.
+\label{e:pmh4}
 \end{equation} 
 Applying (\ref{e:ss}) to express the spectrum in terms of wavenumber yields
 \begin{equation}
 S''_{PM}(k) = \frac{\alpha}{k^4} \exp{\left[ -\beta (0.21^2) \frac{1}{(H_{1/3})^2}\frac{1}{k^2} \right]}.
+\label{e:pmk}
 \end{equation}
 
 \section{Relating Phillips and Pierson-Moskowitz Spectra}
-
+If we want to equate the Phillips spectrum (\ref{e:phk}) with the P-M spectrum  (\ref{e:pmk}), the relationship between the constants is
+\begin{eqnarray}
+A & = & \alpha \\
+\left(\frac{g^2}{U^4}\right) & = & \frac{\beta (0.21)^2}{\left(H_{1/3}\right)^2}
+\end{eqnarray}
+which suggests
+\begin{equation}
+H_{1/3}=\frac{0.18 (U)^2}{g}
+\label{e:phh}
+\end{equation}
+which is consistent with (\ref{e:pmh}).  Therefore, if we wanted to use the Phillips spectrum as expressed in (\ref{e:phk}),
+\begin{equation} 
+S_{Ph}''(k)= 
+= \frac{A}{k^4} \exp{\left[ - \frac{g^2}{(k^2)(U^4)} \right]},
+\end{equation}
+we would choose $A=\alpha=8.1(10^{-3})$ and $U=2.33\sqrt{H_{1/3}(g)}$ which would provide a Phillips spectrum that is equivalent to the PM spectrum (\ref{e:pmh3}) and (\ref{e:pmh4}).
 \newpage
 \setcounter{page}{1}
 \bibliographystyle{ieee/IEEEtran}
