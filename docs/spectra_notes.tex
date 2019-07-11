@@ -70,6 +70,23 @@
 \section{Overview}
 The goal is to consolodate some of the existing literature and notes about wave spectra as they pertain to generating simple, but physically realizable, wave fields for simulation.
 
+\section{General Properties and Relationships}
+
+\subsection{Properties}
+Consider a zero-mean, wide-sense-stationary, continuous time random process $x(t)$.  The expected instantaneous power $E[x^2(t)]$ is equivalent to the variance in the signal $\sigma_x^2$, the autocorrelation function $R_{xx}(\tau)$, integral of the power spectral density (spectrum)
+\[
+\sigma_x^2 = E[x^2(t)] = R_{xx}(\tau=0) = \frac{1}{2\pi} \int_0^{\infty}S_{xx}(\omega)d\omega
+\]
+The PSD is the Fourier transform of the autocorrelation
+\[
+S_{xx}(\omega) = \mathcal{F} R_{xx}(\tau)
+\]
+
+We can relate a spectrum expressed in angular frequency, $S(\omega)$, as a spectrum exrpessed in ordinary frequency, $S'(f)$ as \footnote{We use the prime notation  in $S(\omega)$, $S'(f)$, $S''(k)$ to differentiate between expressions of equivalent spectra with different independent variables.}
+\begin{equation} S'(f) = S(\omega=2 \pi f) \frac{d\omega}{df} = (2 \pi) S(\omega=2 \pi f)\end{equation}
+where the factor of $2 \pi$ insures that the area under the curve stays the same \footnote{\url{http://www.wikiwaves.org/Ocean-Wave_Spectra}}.  See 
+
+
 \section{Relating Spectra in Space and Time}
 Techet notes\footnote{\url{https://ocw.mit.edu/courses/mechanical-engineering/2-22-design-principles-for-ocean-vehicles-13-42-spring-2005/readings/lec6_wavespectra.pdf}} the general form of a fully-developed wave spectra, as a function of temporal frequency,
 \begin{equation}
@@ -83,9 +100,6 @@ A wave spectra can be equivalently expressed as a function of three different va
 \item $k$: \emph{wave number}, $k = 2 \pi/\lambda$, in \unitfrac[]{rad}{m}.
 \end{enumerate}
 
-We can relate a spectrum expressed in angular frequency, $S(\omega)$, as a spectrum exrpessed in ordinary frequency, $S'(f)$ as \footnote{We use the prime notation  in $S(\omega)$, $S'(f)$, $S''(k)$ to differentiate between expressions of equivalent spectra with different independent variables.}
-\begin{equation} S'(f) = S(\omega=2 \pi f) \frac{d\omega}{df} = (2 \pi) S(\omega=2 \pi f)\end{equation}
-where the factor of $2 \pi$ insures that the area under the curve stays the same \footnote{\url{http://www.wikiwaves.org/Ocean-Wave_Spectra}}.
 
 Next we need to specify the dispersion relation\footnote{\url{https://en.wikipedia.org/wiki/Dispersion_(water_waves)}}.  For deep water 
 \begin{eqnarray}
@@ -141,7 +155,14 @@ The Pierson-Moskowitz spectrum can be expressed as\footnote{\url{http://www.wiki
 \begin{equation}
 S_{PM}(\omega)=\frac{\alpha g^2}{\omega^5} \exp{\left[ -\beta \left(\frac{\omega_o}{\omega}\right)^4 \right]} =\frac{\alpha g^2}{\omega^5} \exp{\left[ -\beta \left(\frac{g}{U_{19.5}(\omega)}\right)^4 \right]}
 \end{equation}
-where $\alpha=8.1(10^{-3})$ and $\beta=0.74$ and $U_{19.5}$ is the wind speed at \unit[19.5]{m} above the sea surface.  Furthermore the relationship between significant wave height ($H_{1/3}$) and wind velocity is
+where $\alpha=8.1(10^{-3})$ and $\beta=0.74$, $\omega_o = g/U_{19.5}$ and $U_{19.5}$ is the wind speed at \unit[19.5]{m} above the sea surface.
+
+The peak of the spectrum, where $dS/d\omega=0$, occurs at $\omega_p=\omega_o/1.14$, therefore we can express the spectrum in terms of the peak angular frequency as
+\begin{equation}
+  S_{PM}(\omega)=\frac{\alpha g^2}{\omega^5} \exp{\left[ -\beta \left(\frac{\omega_p (1.14)}{\omega}\right)^4 \right]} =\frac{\alpha g^2}{\omega^5} \exp{\left[ -\frac{5}{4} \left(\frac{\omega_p}{\omega}\right)^4 \right]}
+  \end{equation}
+
+Furthermore the relationship between significant wave height ($H_{1/3}$) and wind velocity is
 \begin{equation}
 H_{1/3} = 0.21 \frac{\left(U_{19.5}\right)^2}{g}
 \label{e:pmh}

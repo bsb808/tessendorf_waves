@@ -1,23 +1,31 @@
-
-
+'''
+Plot a few spectra
+'''
+# Wind velocity
 U = 10.0
+
+
 A = 0.00348
 g = 9.81
 L = U**2/g
+# Phillips
 k = linspace(0.01,1,100)
 ph = (A/k**4)*exp(-1/(k*L)**2)
 
-w = linspace(0.01,5,100)
-phw = A*pi*g**2/(w**5)*exp((-g**4)/((w*U)**4))
-
-alpha = 0.0081
-beta = 0.74
-pmw = alpha*g**2/(w**5)*exp(-beta*(g/(U*w))**4)
 
 figure(1)
 clf()
 plot(k,ph,label='Ph')
 xlabel('wave number [rad/m]')
+
+w = linspace(0.01,5,100)
+phw = A*pi*g**2/(w**5)*exp((-g**4)/((w*U)**4))
+
+# Pierson-Moskowitz as a function of omega
+alpha = 0.0081
+beta = 0.74
+pmw = alpha*g**2/(w**5)*exp(-beta*(g/(U*w))**4)
+
 
 figure(2)
 clf()
